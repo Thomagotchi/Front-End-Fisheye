@@ -1,9 +1,7 @@
 import { photographerTemplate } from "../templates/photographer.js";
+import { getPhotographers } from "../Api/api.js";
 
-const response = await fetch("../../data/photographers.json");
-const json = await response.json();
-
-const photographers = json.photographers;
+const photographers = getPhotographers();
 
 async function displayData(photographers) {
   const photographersSection = document.querySelector(".photographer_section");
@@ -16,6 +14,7 @@ async function displayData(photographers) {
 }
 
 async function init() {
+  const photographers = await getPhotographers();
   if (photographers && photographers.length > 0) {
     displayData(photographers);
   } else {
