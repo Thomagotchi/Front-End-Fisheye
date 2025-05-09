@@ -2,10 +2,62 @@
     display: none;
 }
 
+/* Photographer Header */
 .photograph-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: #FAFAFA;
+    height: 313px;
+    margin: 0 auto;
+    padding: 0 50px;
+    max-width: 1140px;
+}
+
+.photograph-header-container {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 400;
+}
+
+.photograph-header-container h1 {
+    font-size: 64px;
+    color: #D3573C;
+    margin: 0;
+}
+
+.photograph-header-container p {
+    font-size: 18px;
+    color: #525252;
+    margin: 0;
+}
+
+.photograph-header-container p:nth-child(2) {
+    font-size: 24px;
+    color: #901C1C;
+    margin-bottom: 19px;
+}
+
+.photograph-header-photo-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.photograph-header-photo-container img {
+    width: 220%; 
+    height: 220%;
+    object-fit: cover;
+}
+
+.photographer-gallery-image-img {
+    width: 350px;
     height: 300px;
-    margin: 0 100px;
+    object-fit: cover;
 }
 
 .contact_button {
@@ -21,31 +73,158 @@
     cursor: pointer;
 }
 
+/* Photographer Gallery */
+.photographer-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin: 10px auto 0 auto;
+    max-width: 1240px;
+}
+
+.photographer-gallery-image {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 95px;
+    row-gap: 20px;
+}
+
+.photographer-gallery-image-img, .photographer-gallery-image-video {
+    width: 100%;
+    max-width: 350px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.photographer-gallery-image-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "DM Sans", sans-serif;
+    font-size: 24px;
+    color: #901C1C;
+}
+
+.photographer-gallery-image-likes {
+    display: flex;
+    align-items: center;
+    gap: 4px; 
+}
+
+/* Photographer Sticky */
+.photographer-sticky {
+    display: flex;
+    padding: 21px 32px;
+    width: 312px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #DB8876;
+    border-radius: 5px 5px 0 0;
+    position: fixed; 
+    right: 36px;
+    bottom: 0;
+    color: #000000;
+    font-family: "DM Sans", sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.photographer-sticky p {
+    margin: 0;
+}
+
+.photographer-sticky-likes {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Modals */
 .modal {
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: calc(100vh - 124px);
+    transform: translate(-50%, -50%);
+}
+
+/* Media Modal */
+#media_modal {
+    background-color: white;
+    max-width: 1242px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#media_modal .modal-close {
+    position: absolute; 
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+#media_modal .modal-arrow {
+    margin: 0 32px;
+    cursor: pointer;
+}
+
+#media_modal .modal-arrow.modal-arrow-left {
+    transform: rotate(180deg);
+}
+
+.media-modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1050px;
+    height: calc(100% - 44px);
+}
+
+.media-modal-container img, .media-modal-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Contact Modal */
+#contact_modal {
+    max-width: 670px;
+}
+
+.contact-modal {
     border-radius: 5px;
     background-color: #DB8876;
-    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 35px;
-    margin: auto;
+    padding: 15px 35px 35px 35px;
 }
 
-.modal header {
+.contact-modal header {
     justify-content: space-between;
     width: 100%;
+    height: fit-content;
 }
 
-.modal header img {
+.contact_modal_header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.contact-modal header img {
     cursor: pointer;
+    margin:20px 0 auto 0;
 }
 
-.modal header h2 {
+.contact-modal header .contact_modal_header h2, .contact-modal header .contact_modal_header p {
     font-size: 64px;
     font-weight: normal;
-    text-align: center;
+    margin: 0;
 }
 
 form {
