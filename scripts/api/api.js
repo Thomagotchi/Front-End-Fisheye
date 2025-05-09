@@ -1,22 +1,23 @@
-export class PhotographerAPI {
-  constructor(basePath = "../../data") {
-    this.basePath = basePath;
-  }
+export async function getPhotographers() {
+  const response = await fetch("../../data/photographers.json");
+  const json = await response.json();
+  return json.photographers;
+}
 
-  async getPhotographers() {
-    try {
-      const response = await fetch(`${this.basePath}/photographers.json`);
+export async function getMedias() {
+  const response = await fetch("../../data/photographers.json");
+  const json = await response.json();
+  return json.media;
+}
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+export async function getPhotographer(id) {
+  const photographers = await getPhotographers();
+  return photographers.find((photographer) => photographer.id === parseInt(id));
+}
 
-      const data = await response.json();
-      console.log("Photographers data:", data.photographers);
-      return data;
-    } catch (error) {
-      console.error("Error fetching photographers:", error);
-      return { photographers: [] };
-    }
-  }
+export async function getPhotographerMedias(id) {
+  const photographer = await getPhotographer(id);
+  const medias = await getMedias();
+
+  return medias.filter((media) => media.photographerId === photographer.id);
 }
