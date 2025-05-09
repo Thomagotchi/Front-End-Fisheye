@@ -1,9 +1,10 @@
-function displayModal() {
-    const modal = document.getElementById("contact_modal");
-	modal.style.display = "block";
+function displayContactModal() {
+  const modal = document.getElementById("contact_modal");
+  modal.style.display = "block";
+  modal.style.position = "fixed";
 }
 
-function closeModal() {
-    const modal = document.getElementById("contact_modal");
-    modal.style.display = "none";
+function closeContactModal() {
+  const modal = document.getElementById("contact_modal");
+  modal.style.display = "none";
 }
