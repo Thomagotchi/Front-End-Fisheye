@@ -5,33 +5,63 @@
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Fisheye - photographe </title>
   </head>
   <body>
     <header>
-      <img src="assets/images/logo.png" class="logo" />
+      <a href="/">
+        <img src="assets/images/logo.png" class="logo" />
+      </a>
     </header>
     <main id="main">
       <div class="photograph-header">
-        <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+        <button class="contact_button" onclick="displayContactModal()">Contactez-moi</button>
       </div>
     </main>
-    <div id="contact_modal">
-			<div class="modal">
+    <div id="media_modal" class="modal">
+      <img src="assets/icons/closeModal.png" class="modal-close" />
+      <div class="modal-arrow modal-arrow-left">
+        <img src="assets/icons/carouselArrow.png" alt="arrow left">
+      </div>
+      <div class="media-modal-container">
+      </div>
+      <div class="modal-arrow modal-arrow-right">
+        <img src="assets/icons/carouselArrow.png" alt="arrow right">
+      </div>
+		</div>
+    <div id="contact_modal" class="modal">
+			<div class="contact-modal">
 				<header>
-          <h2>Contactez-moi</h2>
-          <img src="assets/icons/close.svg" onclick="closeModal()" />
+          <div class="contact_modal_header">
+            <h2>Contactez-moi</h2>
+            <p class="contact_modal_name"></p>
+          </div>
+          <img src="assets/icons/close.svg" onclick="closeContactModal()" />
         </header>
 				<form>
 					<div>
 						<label>Prénom</label>
-						<input />
+						<input type="text" />
+					</div>
+          <div>
+						<label>Nom</label>
+						<input type="text" />
+					</div>
+          <div>
+						<label>Email</label>
+						<input type="email" />
+					</div>
+          <div>
+						<label>Votre message</label>
+						<textarea></textarea>
 					</div>
           <button class="contact_button">Envoyer</button>
 				</form>
 			</div>
 		</div>
-    <script src="/scripts/pages/photographer.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
+    <script type="module" src="scripts/pages/photographer.js"></script>
+    <script type="module" src="scripts/utils/contactForm.js"></script>
+    <script type="module" src="scripts/utils/mediaModal.js"></script>
   </body>
 </html>
