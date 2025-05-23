@@ -40,6 +40,10 @@ h1 {
 }
 
 .photographer_section article .photographer-card-img-container {
+
+}
+
+.photographer_section article .photographer-card-img {
     display: flex;
     height: 200px;
     width: 200px;
@@ -48,11 +52,6 @@ h1 {
     overflow: hidden;
     justify-content: center;
     align-items: center;
-}
-
-.photographer_section article .photographer-card-img-container img {
-    height: 140%;
-    width: 140%;
     object-fit: cover;
 }
 
