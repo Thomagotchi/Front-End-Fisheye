@@ -1,9 +1,5 @@
 import { getPhotographerMedias, getPhotographers } from "../Api/api.js";
-import {
-  closeContactModal,
-  displayContactModal,
-} from "../utils/contactForm.js";
-import { displayMediaModal } from "../utils/mediaModal.js";
+import { closeModal, displayModal } from "../utils/modal.js";
 
 const getPhotographerID = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -19,24 +15,48 @@ const currentPhotographer = async () => {
   return photographer;
 };
 
-function createMediaElement(media, photographerFolder, photographer) {
-  const mediaUrl = media.image || media.video;
+function createMediaElement(
+  photographerFolder,
+  photographer,
+  sortedMedias,
+  index
+) {
+  const mediaUrl = sortedMedias[index].image || sortedMedias[index].video;
   const isVideo = mediaUrl.toLowerCase().endsWith(".mp4");
 
   if (isVideo) {
     const video = document.createElement("video");
+    video.setAttribute("role", "button");
+    video.setAttribute("tabindex", "0");
+    video.addEventListener("click", () =>
+      displayModal("media", photographer, sortedMedias, index)
+    );
+    video.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        displayModal("media", photographer, sortedMedias, index);
+      }
+    });
     video.classList.add("photographer-gallery-image-video");
     video.src = `assets/photographers/${photographerFolder}/${mediaUrl}`;
-    video.title = media.title;
+    video.title = sortedMedias[index].title;
+    video.setAttribute("aria-label", sortedMedias[index].title);
     return video;
   } else {
     const image = document.createElement("img");
     image.classList.add("photographer-gallery-image-img");
     image.src = `assets/photographers/${photographerFolder}/${mediaUrl}`;
-    image.alt = media.title;
+    image.alt = sortedMedias[index].title;
+    image.setAttribute("aria-label", sortedMedias[index].title);
+    image.setAttribute("role", "button");
+    image.setAttribute("tabindex", "0");
     image.addEventListener("click", () =>
-      displayMediaModal(photographer, media)
+      displayModal("media", photographer, sortedMedias, index)
     );
+    image.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        displayModal("media", photographer, sortedMedias, index);
+      }
+    });
     return image;
   }
 }
@@ -44,7 +64,16 @@ function createMediaElement(media, photographerFolder, photographer) {
 export function photographerTemplate(data) {
   const { name, portrait, city, country, tagline, price, id } = data;
 
+  let currentLikes = 0;
+
   const picture = `assets/photographers/${portrait}`;
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeModal("media");
+      closeModal("contact");
+    }
+  });
 
   function getUserCardDOM() {
     const article = document.querySelector(".photographer_section article");
@@ -113,10 +142,10 @@ export function photographerTemplate(data) {
     );
 
     photographerHeadButton.addEventListener("click", () => {
-      displayContactModal();
+      displayModal("contact", "", "");
     });
     photographerHeadClose.addEventListener("click", () => {
-      closeContactModal();
+      closeModal("contact", "", "");
     });
 
     headName.textContent = photographer.name;
@@ -129,6 +158,8 @@ export function photographerTemplate(data) {
   }
 
   function getPhotographerGalleryDOM(photographer, medias) {
+    let sortedMedias = sortMedias(medias, "popularity");
+
     const photographerGallery = document.querySelector(".photographer-gallery");
     const photographerGallerySort = photographerGallery.querySelector(
       ".photographer-gallery-sort"
@@ -136,6 +167,12 @@ export function photographerTemplate(data) {
     const imageGallery = photographerGallery.querySelector(
       ".photographer-gallery-image"
     );
+
+    const mediaModalCloseBtn = document.querySelector(".media-modal-close");
+
+    mediaModalCloseBtn.addEventListener("click", () => {
+      closeModal("media");
+    });
 
     function sortMedias(medias, sortBy = "popularity") {
       const sortedMedias = [...medias];
@@ -168,7 +205,7 @@ export function photographerTemplate(data) {
         }
       });
 
-      medias.forEach((media) => {
+      medias.forEach((media, index) => {
         const card = template.content.cloneNode(true);
         const container = card.querySelector(
           ".photographer-gallery-image-container"
@@ -177,17 +214,37 @@ export function photographerTemplate(data) {
         const title = card.querySelector(".photographer-gallery-image-title");
         const likesCount = card.querySelector(".likes-count");
 
+        let mediaLikesCounter = media.likes;
+        let allPhotographerLikes = medias.reduce(
+          (acc, media) => acc + media.likes,
+          0
+        );
+
+        const stickyLikesCount = document.querySelector(
+          ".photographer-sticky-likes-text"
+        );
+
+        const likeBtn = card.querySelector(".fa-solid");
+        likeBtn.addEventListener("click", () => {
+          mediaLikesCounter = mediaLikesCounter + 1;
+          likesCount.textContent = mediaLikesCounter;
+          allPhotographerLikes = allPhotographerLikes + 1;
+          stickyLikesCount.textContent = allPhotographerLikes;
+        });
+
+        likesCount.textContent = mediaLikesCounter;
+
         title.textContent = media.title;
-        likesCount.textContent = media.likes;
 
         const photographerFolder = photographer.name
           .split(" ")[0]
           .replace("-", " ");
 
         const mediaElement = createMediaElement(
-          media,
           photographerFolder,
-          photographer
+          photographer,
+          medias,
+          index
         );
         mediaContainer.appendChild(mediaElement);
 
@@ -195,10 +252,10 @@ export function photographerTemplate(data) {
       });
     }
 
-    renderGallery(medias);
+    renderGallery(sortedMedias);
 
     photographerGallerySort.addEventListener("change", (e) => {
-      const sortedMedias = sortMedias(medias, e.target.value);
+      sortedMedias = sortMedias(medias, e.target.value);
       renderGallery(sortedMedias);
     });
 
