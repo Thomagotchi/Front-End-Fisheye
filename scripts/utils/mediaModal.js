@@ -36,11 +36,6 @@ export function closeMediaModal() {
   modal.style.display = "none";
 }
 
-export function initMediaModal() {
-  const closeButton = document.querySelector(".modal-close");
-  closeButton.addEventListener("click", closeMediaModal);
-}
-
 export function previousMedia() {
   const currentMedia = document.querySelector(".media-modal-content");
 }
