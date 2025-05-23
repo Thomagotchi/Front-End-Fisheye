@@ -16,7 +16,49 @@
     </header>
     <main id="main">
       <div class="photograph-header">
+        <div class="photograph-header-container">
+          <h1 class="photograph-header-name"></h1>
+          <p class="photograph-header-location"></p>
+          <p class="photograph-header-tagline"></p>
+        </div>
         <button class="contact_button" onclick="displayContactModal()">Contactez-moi</button>
+        <div class="photograph-header-photo-container">
+          <img class="photograph-header-photo" src="" alt="">
+        </div>
+      </div>
+      
+      <div class="photographer-gallery">
+        <div class="photographer-gallery-sort">
+          <label for="sort-select">Trier par</label>
+          <select id="sort-select">
+            <option value="popularity">Popularité</option>
+            <option value="date">Date</option>
+            <option value="title">Titre</option>
+          </select>
+        </div>
+        <div class="photographer-gallery-image">
+          <template class="media-card-template">
+            <div class="photographer-gallery-image-container">
+              <div class="media-container">
+              </div>
+              <div class="photographer-gallery-image-caption">
+                <p class="photographer-gallery-image-title"></p>
+                <div class="photographer-gallery-image-likes">
+                  <p class="likes-count"></p>
+                  <i class="fa-solid fa-heart"></i>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <div class="photographer-sticky">
+        <div class="photographer-sticky-likes">
+          <p class="photographer-sticky-likes-text">0</p>
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <p class="photographer-sticky-tjm">0€ / jour</p>
       </div>
     </main>
     <div id="media_modal" class="modal">
@@ -37,7 +79,7 @@
             <h2>Contactez-moi</h2>
             <p class="contact_modal_name"></p>
           </div>
-          <img src="assets/icons/close.svg" onclick="closeContactModal()" />
+          <img src="assets/icons/close.svg" class="contact-modal-close"/>
         </header>
 				<form>
 					<div>
