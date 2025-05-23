@@ -153,7 +153,7 @@
 #media_modal {
     background-color: white;
     max-width: 1242px;
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
 }
@@ -190,6 +190,7 @@
 
 /* Contact Modal */
 #contact_modal {
+    display: none;
     max-width: 670px;
 }
 
