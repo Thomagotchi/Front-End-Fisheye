@@ -1,5 +1,5 @@
-import { photographerTemplate } from "../templates/photographer.js";
 import { getPhotographers } from "../Api/api.js";
+import { photographerTemplate } from "./photographer.js";
 
 const photographers = getPhotographers();
 
