@@ -1,6 +1,9 @@
 import { getPhotographerMedias, getPhotographers } from "../Api/api.js";
-import { photographerTemplate } from "../templates/photographer.js";
-import { initMediaModal } from "../utils/mediaModal.js";
+import {
+  closeContactModal,
+  displayContactModal,
+} from "../utils/contactForm.js";
+import { displayMediaModal } from "../utils/mediaModal.js";
 
 const getPhotographerID = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,6 +18,223 @@ const currentPhotographer = async () => {
   );
   return photographer;
 };
+
+function createMediaElement(media, photographerFolder, photographer) {
+  const mediaUrl = media.image || media.video;
+  const isVideo = mediaUrl.toLowerCase().endsWith(".mp4");
+
+  if (isVideo) {
+    const video = document.createElement("video");
+    video.classList.add("photographer-gallery-image-video");
+    video.src = `assets/photographers/${photographerFolder}/${mediaUrl}`;
+    video.title = media.title;
+    return video;
+  } else {
+    const image = document.createElement("img");
+    image.classList.add("photographer-gallery-image-img");
+    image.src = `assets/photographers/${photographerFolder}/${mediaUrl}`;
+    image.alt = media.title;
+    image.addEventListener("click", () =>
+      displayMediaModal(photographer, media)
+    );
+    return image;
+  }
+}
+
+export function photographerTemplate(data) {
+  const { name, portrait, city, country, tagline, price, id } = data;
+
+  const picture = `assets/photographers/${portrait}`;
+
+  function getUserCardDOM() {
+    const article = document.querySelector(".photographer_section article");
+    const isFirstCard =
+      document.querySelector(".photographer-card-name").textContent === "";
+
+    const newArticle = article.cloneNode(true);
+    const link = newArticle.querySelector(".photographer-card-link");
+    const img = newArticle.querySelector(".photographer-card-img");
+    const h2 = newArticle.querySelector(".photographer-card-name");
+    const description = newArticle.querySelector(
+      ".photographer-card-description"
+    );
+    const [location, tag, tjm] = description.querySelectorAll("p");
+
+    link.setAttribute("href", `photographer.html?id=${id}`);
+    link.setAttribute("aria-label", name);
+    img.setAttribute("src", picture);
+    img.setAttribute("alt", name);
+    h2.textContent = name;
+    location.textContent = city + ", " + country;
+    tag.textContent = tagline;
+    tjm.textContent = price + "€/jour";
+
+    if (isFirstCard) {
+      const existingImg = article.querySelector(".photographer-card-img");
+      const existingH2 = article.querySelector(".photographer-card-name");
+      const existingDescription = article.querySelector(
+        ".photographer-card-description"
+      );
+      const [existingLocation, existingTag, existingTjm] =
+        existingDescription.querySelectorAll("p");
+      const existingLink = article.querySelector(".photographer-card-link");
+
+      existingLink.setAttribute("href", `photographer.html?id=${id}`);
+      existingLink.setAttribute("aria-label", name);
+      existingImg.setAttribute("src", picture);
+      existingImg.setAttribute("alt", name);
+      existingH2.textContent = name;
+      existingLocation.textContent = city + ", " + country;
+      existingTag.textContent = tagline;
+      existingTjm.textContent = price + "€/jour";
+      return article;
+    } else {
+      article.parentNode.appendChild(newArticle);
+      return newArticle;
+    }
+  }
+
+  function getPhotographerHeadDOM(photographer) {
+    const photographerHead = document.querySelector(".photograph-header");
+    const photographerHeadButton = document.querySelector(".contact_button");
+
+    const headName = photographerHead.querySelector(".photograph-header-name");
+    const headLocation = photographerHead.querySelector(
+      ".photograph-header-location"
+    );
+    const headTagline = photographerHead.querySelector(
+      ".photograph-header-tagline"
+    );
+    const headPhoto = photographerHead.querySelector(
+      ".photograph-header-photo"
+    );
+    const photographerHeadClose = document.querySelector(
+      ".contact-modal-close"
+    );
+
+    photographerHeadButton.addEventListener("click", () => {
+      displayContactModal();
+    });
+    photographerHeadClose.addEventListener("click", () => {
+      closeContactModal();
+    });
+
+    headName.textContent = photographer.name;
+    headLocation.textContent = photographer.city + ", " + photographer.country;
+    headTagline.textContent = photographer.tagline;
+    headPhoto.setAttribute("src", picture);
+    headPhoto.setAttribute("alt", photographer.name);
+
+    return photographerHead;
+  }
+
+  function getPhotographerGalleryDOM(photographer, medias) {
+    const photographerGallery = document.querySelector(".photographer-gallery");
+    const photographerGallerySort = photographerGallery.querySelector(
+      ".photographer-gallery-sort"
+    );
+    const imageGallery = photographerGallery.querySelector(
+      ".photographer-gallery-image"
+    );
+
+    function sortMedias(medias, sortBy = "popularity") {
+      const sortedMedias = [...medias];
+      switch (sortBy) {
+        case "popularity":
+          return sortedMedias.sort((a, b) => b.likes - a.likes);
+        case "date":
+          return sortedMedias.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+        case "title":
+          return sortedMedias.sort((a, b) => a.title.localeCompare(b.title));
+        default:
+          return sortedMedias.sort((a, b) => b.likes - a.likes);
+      }
+    }
+
+    function renderGallery(medias) {
+      const templates = document.querySelectorAll(".media-card-template");
+      const template = templates[0];
+
+      templates.forEach((t, index) => {
+        if (index > 0) t.remove();
+      });
+
+      const galleryContent = Array.from(imageGallery.children);
+      galleryContent.forEach((child) => {
+        if (!child.classList.contains("media-card-template")) {
+          child.remove();
+        }
+      });
+
+      medias.forEach((media) => {
+        const card = template.content.cloneNode(true);
+        const container = card.querySelector(
+          ".photographer-gallery-image-container"
+        );
+        const mediaContainer = card.querySelector(".media-container");
+        const title = card.querySelector(".photographer-gallery-image-title");
+        const likesCount = card.querySelector(".likes-count");
+
+        title.textContent = media.title;
+        likesCount.textContent = media.likes;
+
+        const photographerFolder = photographer.name
+          .split(" ")[0]
+          .replace("-", " ");
+
+        const mediaElement = createMediaElement(
+          media,
+          photographerFolder,
+          photographer
+        );
+        mediaContainer.appendChild(mediaElement);
+
+        imageGallery.appendChild(card);
+      });
+    }
+
+    renderGallery(medias);
+
+    photographerGallerySort.addEventListener("change", (e) => {
+      const sortedMedias = sortMedias(medias, e.target.value);
+      renderGallery(sortedMedias);
+    });
+
+    return photographerGallery;
+  }
+
+  function getPhotographerStickyDOM(photographer, medias) {
+    const main = document.getElementById("main");
+
+    function getTotalLikes(medias) {
+      return medias.reduce((acc, media) => acc + media.likes, 0);
+    }
+    const totalLikes = getTotalLikes(medias);
+
+    const photographerSticky = document.querySelector(".photographer-sticky");
+    const photographerStickyLikesText = document.querySelector(
+      ".photographer-sticky-likes-text"
+    );
+    const photographerStickyTJM = document.querySelector(
+      ".photographer-sticky-tjm"
+    );
+
+    photographerStickyLikesText.textContent = totalLikes;
+    photographerStickyTJM.textContent = photographer.price + "€ / jour";
+    return photographerSticky;
+  }
+
+  return {
+    name,
+    picture,
+    getUserCardDOM,
+    getPhotographerHeadDOM,
+    getPhotographerGalleryDOM,
+    getPhotographerStickyDOM,
+  };
+}
 
 async function init() {
   const photographer = await currentPhotographer();
@@ -33,4 +253,3 @@ async function init() {
 }
 
 init();
-initMediaModal();
