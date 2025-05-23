@@ -30,7 +30,7 @@
       <div class="photographer-gallery">
         <div class="photographer-gallery-sort">
           <label for="sort-select">Trier par</label>
-          <select id="sort-select" aria-label="8" name="Order by">
+          <select id="sort-select" name="sort-select">
             <option value="popularity">Popularité</option>
             <option value="date">Date</option>
             <option value="title">Titre</option>
@@ -74,29 +74,29 @@
 		</div>
     <div id="contact_modal" class="modal">
 			<div class="contact-modal">
-				<header>
-          <div class="contact_modal_header">
-            <h2>Contactez-moi</h2>
+				<div role="dialog" aria-label="Contact modal title" class="contact-modal-header">
+          <div class="contact-modal-header-text">
+            <h2 id="contact-modal-title">Contactez-moi</h2>
             <p class="contact_modal_name"></p>
           </div>
-          <img src="assets/icons/close.svg" class="contact-modal-close"/>
-        </header>
-				<form>
+          <img src="assets/icons/close.svg" class="contact-modal-close" alt="Fermer"/>
+        </div>
+				<form class="contact-modal-form">
 					<div>
 						<label>Prénom</label>
-						<input type="text" />
+						<input type="text" required/>
 					</div>
           <div>
 						<label>Nom</label>
-						<input type="text" />
+						<input type="text" required/>
 					</div>
           <div>
 						<label>Email</label>
-						<input type="email" />
+						<input type="email" required/>
 					</div>
           <div>
 						<label>Votre message</label>
-						<textarea></textarea>
+						<textarea required></textarea>
 					</div>
           <button class="contact_button">Envoyer</button>
 				</form>
