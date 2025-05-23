@@ -62,8 +62,34 @@ export function displayModal(name, photographer, sortedMedias, index) {
 
     document.addEventListener("keydown", handleKeyboardNavigation);
   } else if (name === "contact") {
+    // Cela rend la modal contact visible
     const modal = document.getElementById("contact_modal");
     modal.style.display = "flex";
+
+    // Cela récupere le formulaire de la modal contact
+    const contactForm = document.querySelector(".contact-modal-form");
+    // Si tout les champs du formulaire sont remplis, on envoie les données
+    contactForm.addEventListener("submit", (e) => {
+      // Cela empêche le formulaire de se soumettre et de rafraichir la page
+      e.preventDefault();
+
+      // Cela récupère les données du formulaire
+      const formData = {
+        firstName: e.target.querySelectorAll('input[type="text"]')[0].value,
+        lastName: e.target.querySelectorAll('input[type="text"]')[1].value,
+        email: e.target.querySelector('input[type="email"]').value,
+        message: e.target.querySelector("textarea").value,
+      };
+
+      // Cela affiche les données du formulaire
+      console.log("Form submitted:", formData);
+
+      // Cela réinitialise le formulaire
+      contactForm.reset();
+
+      // Cela ferme la modal contact
+      closeModal("contact");
+    });
   }
 }
 
