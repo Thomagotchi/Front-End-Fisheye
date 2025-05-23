@@ -39,10 +39,6 @@ h1 {
     text-decoration: none;
 }
 
-.photographer_section article .photographer-card-img-container {
-
-}
-
 .photographer_section article .photographer-card-img {
     display: flex;
     height: 200px;
