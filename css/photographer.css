@@ -192,6 +192,7 @@
 }
 
 .contact-modal {
+    width: 100%;
     border-radius: 5px;
     background-color: #DB8876;
     display: flex;
@@ -201,25 +202,26 @@
     padding: 15px 35px 35px 35px;
 }
 
-.contact-modal header {
+.contact-modal .contact-modal-header {
+    display: flex;
     justify-content: space-between;
     width: 100%;
     height: fit-content;
 }
 
-.contact_modal_header {
+.contact-modal-header-text {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin-bottom: 8px;
 }
 
-.contact-modal header img {
+.contact-modal .contact-modal-header img {
     cursor: pointer;
-    margin:20px 0 auto 0;
+    margin: 20px 0 auto 0;
 }
 
-.contact-modal header .contact_modal_header h2, .contact-modal header .contact_modal_header p {
+.contact-modal .contact-modal-header .contact-modal-header-text h2, .contact-modal .contact-modal-header .contact-modal-header-text p {
     font-size: 64px;
     font-weight: normal;
     margin: 0;
