@@ -21,7 +21,7 @@
           <p class="photograph-header-location"></p>
           <p class="photograph-header-tagline"></p>
         </div>
-        <button class="contact_button" onclick="displayContactModal()">Contactez-moi</button>
+        <button class="contact_button">Contactez-moi</button>
         <div class="photograph-header-photo-container">
           <img class="photograph-header-photo" src="" alt="">
         </div>
@@ -30,7 +30,7 @@
       <div class="photographer-gallery">
         <div class="photographer-gallery-sort">
           <label for="sort-select">Trier par</label>
-          <select id="sort-select">
+          <select id="sort-select" aria-label="8" name="Order by">
             <option value="popularity">Popularité</option>
             <option value="date">Date</option>
             <option value="title">Titre</option>
@@ -38,17 +38,17 @@
         </div>
         <div class="photographer-gallery-image">
           <template class="media-card-template">
-            <div class="photographer-gallery-image-container">
-              <div class="media-container">
-              </div>
+            <article class="photographer-gallery-image-container">
+              <a class="media-container">
+              </a>
               <div class="photographer-gallery-image-caption">
                 <p class="photographer-gallery-image-title"></p>
                 <div class="photographer-gallery-image-likes">
                   <p class="likes-count"></p>
-                  <i class="fa-solid fa-heart"></i>
+                  <i class="fa-solid fa-heart" aria-label="likes"></i>
                 </div>
               </div>
-            </div>
+            </article>
           </template>
         </div>
       </div>
@@ -62,7 +62,7 @@
       </div>
     </main>
     <div id="media_modal" class="modal">
-      <img src="assets/icons/closeModal.png" class="modal-close" />
+      <img src="assets/icons/closeModal.png" class="media-modal-close"/>
       <div class="modal-arrow modal-arrow-left">
         <img src="assets/icons/carouselArrow.png" alt="arrow left">
       </div>
@@ -103,7 +103,6 @@
 			</div>
 		</div>
     <script type="module" src="scripts/pages/photographer.js"></script>
-    <script type="module" src="scripts/utils/contactForm.js"></script>
-    <script type="module" src="scripts/utils/mediaModal.js"></script>
+    <script type="module" src="scripts/utils/modal.js"></script>
   </body>
 </html>
