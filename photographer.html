@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <meta charset="utf-8">
@@ -10,11 +10,13 @@
   </head>
   <body>
     <header>
-      <a href="/">
-        <img src="assets/images/logo.png" class="logo" />
+      <!-- Lien logo vers la page d'accueil -->
+      <a href="/" title="Retour à l'accueil">
+        <img src="assets/images/logo.png" class="logo" alt="Logo Fisheye" />
       </a>
     </header>
     <main id="main">
+      <!-- Section header -->
       <div class="photograph-header">
         <div class="photograph-header-container">
           <h1 class="photograph-header-name"></h1>
@@ -26,17 +28,32 @@
           <img class="photograph-header-photo" src="" alt="">
         </div>
       </div>
-      
+      <!-- Section galerie -->
       <div class="photographer-gallery">
         <div class="photographer-gallery-sort">
           <label for="sort-select">Trier par</label>
-          <select id="sort-select" name="sort-select">
-            <option value="popularity">Popularité</option>
-            <option value="date">Date</option>
-            <option value="title">Titre</option>
-          </select>
+          <!-- Select pour trier les médias -->
+           <div class="photographer-gallery-sort-select">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <g clip-path="url(#clip0_120_430)">
+              <path d="M22.12 11.4531L16 17.5598L9.88 11.4531L8 13.3331L16 21.3331L24 13.3331L22.12 11.4531Z" fill="white"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_120_430">
+              <rect width="32" height="32" fill="white"/>
+              </clipPath>
+              </defs>
+            </svg>
+            <select id="sort-select" name="sort-select">
+              <option value="popularity">Popularité</option>
+              <option value="date">Date</option>
+              <option value="title">Titre</option>
+            </select>
+          </div>
         </div>
+        <!-- Conteneur pour les médias -->
         <div class="photographer-gallery-image">
+          <!-- Template pour les médias -->
           <template class="media-card-template">
             <article class="photographer-gallery-image-container">
               <a class="media-container">
@@ -45,24 +62,25 @@
                 <p class="photographer-gallery-image-title"></p>
                 <div class="photographer-gallery-image-likes">
                   <p class="likes-count"></p>
-                  <i class="fa-solid fa-heart" aria-label="likes"></i>
+                  <em class="fa-solid fa-heart" aria-label="likes"></em>
                 </div>
               </div>
             </article>
           </template>
         </div>
       </div>
-
+      <!-- Section sticky -->
       <div class="photographer-sticky">
         <div class="photographer-sticky-likes">
           <p class="photographer-sticky-likes-text">0</p>
-          <i class="fa-solid fa-heart"></i>
+          <em class="fa-solid fa-heart" aria-label="likes"></em>
         </div>
         <p class="photographer-sticky-tjm">0€ / jour</p>
       </div>
     </main>
+    <!-- Modal pour les médias -->
     <div id="media_modal" class="modal">
-      <img src="assets/icons/closeModal.png" class="media-modal-close"/>
+      <img src="assets/icons/closeModal.png" class="media-modal-close" alt="Fermer"/>
       <div class="modal-arrow modal-arrow-left">
         <img src="assets/icons/carouselArrow.png" alt="arrow left">
       </div>
@@ -72,6 +90,7 @@
         <img src="assets/icons/carouselArrow.png" alt="arrow right">
       </div>
 		</div>
+    <!-- Modal pour le contact -->
     <div id="contact_modal" class="modal">
 			<div class="contact-modal">
 				<div role="dialog" aria-label="Contact modal title" class="contact-modal-header">
@@ -82,23 +101,23 @@
           <img src="assets/icons/close.svg" class="contact-modal-close" alt="Fermer"/>
         </div>
 				<form class="contact-modal-form">
-					<div>
-						<label>Prénom</label>
-						<input type="text" required/>
+					<div class="form-input">
+						<label for="firstname">Prénom</label>
+						<input type="text" id="firstname" name="firstname" required/>
 					</div>
-          <div>
-						<label>Nom</label>
-						<input type="text" required/>
+          <div class="form-input">
+						<label for="lastname">Nom</label>
+						<input type="text" id="lastname" name="lastname" required/>
 					</div>
-          <div>
-						<label>Email</label>
-						<input type="email" required/>
+          <div class="form-input">
+						<label for="email">Email</label>
+						<input type="email" id="email" name="email" required/>
 					</div>
-          <div>
-						<label>Votre message</label>
-						<textarea required></textarea>
+          <div class="form-input">
+						<label for="message">Votre message</label>
+						<textarea id="message" name="message" required></textarea>
 					</div>
-          <button class="contact_button">Envoyer</button>
+          <button tabindex="0" class="contact_button">Envoyer</button>
 				</form>
 			</div>
 		</div>
