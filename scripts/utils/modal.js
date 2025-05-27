@@ -1,57 +1,132 @@
-// Cela deviendras la fonction pour naviguer entre les photos en utilisant les fleches du clavier
+// Import du Factory des médias
+import { MediaElementFactory } from "../pages/photographer.js";
+
+// Variable pour la navigation au clavier entre les photos
 let handleKeyboardNavigation = null;
 
+// Variable pour la touche escape
+let handleEscapeKey = null;
+
 export function displayModal(name, photographer, sortedMedias, index) {
-  // Cette fonction affiche la modal pour les medias en fonction du props passer
+  // Gestionnaire de la touche escape
+  handleEscapeKey = (e) => {
+    if (e.key === "Escape") {
+      closeModal(name);
+    }
+  };
+  document.addEventListener("keydown", handleEscapeKey);
+
   if (name === "media") {
     const modal = document.getElementById("media_modal");
     modal.style.display = "flex";
     modal.style.position = "fixed";
 
-    // Cela permet de stocker l'index de la photo dans la modal pour pouvoir naviguer entre les photos
+    // Récupération des boutons de la modal
+    const closeButton = modal.querySelector(".media-modal-close");
+    const leftArrow = modal.querySelector(".modal-arrow-left");
+    const rightArrow = modal.querySelector(".modal-arrow-right");
+
+    const focusableElements = [];
+
+    if (closeButton) {
+      closeButton.setAttribute("tabindex", "0");
+      focusableElements.push(closeButton);
+      // Ajout de l'événement pour la touche entrée sur le bouton de fermeture
+      closeButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          closeModal("media");
+        }
+      });
+    }
+
+    if (leftArrow) {
+      leftArrow.setAttribute("tabindex", "0");
+      focusableElements.push(leftArrow);
+    }
+
+    if (rightArrow) {
+      rightArrow.setAttribute("tabindex", "0");
+      focusableElements.push(rightArrow);
+    }
+
+    if (focusableElements.length > 0) {
+      modal.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey) {
+            // Si shift + tab et sur le premier élément, focus sur le dernier
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else {
+            // Si tab et sur le dernier élément, focus sur le premier
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      });
+
+      // Focus initial sur la flèche gauche
+      if (leftArrow) {
+        leftArrow.focus();
+      }
+    }
+
+    // Stockage de l'index de la photo pour la navigation
     modal.dataset.currentIndex = index;
 
-    // Cette fonction met initialise le contenu de la modal
+    // Initialisation du contenu de la modal
     updateModalContent(photographer, sortedMedias, index);
 
-    // Fonction pour naviguer vers la photo précédente
+    // Navigation vers la photo précédente
     function prevMedia() {
-      // On decrémente l'index de 1 ou sinon on revient à la dernière photo
       let newIndex = parseInt(modal.dataset.currentIndex) - 1;
       if (newIndex < 0) {
         newIndex = sortedMedias.length - 1;
       }
-      // On met à jour l'index de la photo dans la modal
       modal.dataset.currentIndex = newIndex;
-      // On met à jour le contenu de la modal
       updateModalContent(photographer, sortedMedias, newIndex);
     }
 
-    // Fonction pour naviguer vers la photo suivante
+    // Navigation vers la photo suivante
     function nextMedia() {
-      // On incrémente l'index de 1 ou sinon on revient à la première photo
       let newIndex = parseInt(modal.dataset.currentIndex) + 1;
       if (newIndex >= sortedMedias.length) {
         newIndex = 0;
       }
-      // On met à jour l'index de la photo dans la modal
       modal.dataset.currentIndex = newIndex;
-      // On met à jour le contenu de la modal
       updateModalContent(photographer, sortedMedias, newIndex);
     }
 
-    // Evenements pour les fleches
-    const leftArrow = document.querySelector(".modal-arrow-left");
-    const rightArrow = document.querySelector(".modal-arrow-right");
+    // Événements pour les flèches
+    if (leftArrow) {
+      leftArrow.addEventListener("click", () => {
+        prevMedia();
+      });
+      leftArrow.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          prevMedia();
+        }
+      });
+    }
 
-    leftArrow.addEventListener("click", () => {
-      prevMedia();
-    });
-    rightArrow.addEventListener("click", () => {
-      nextMedia();
-    });
+    if (rightArrow) {
+      rightArrow.addEventListener("click", () => {
+        nextMedia();
+      });
+      rightArrow.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          nextMedia();
+        }
+      });
+    }
 
-    // Store the keyboard event handler as a named function
+    // Gestionnaire des touches fléchées du clavier
     handleKeyboardNavigation = (e) => {
       if (e.key === "ArrowLeft") {
         prevMedia();
@@ -62,18 +137,93 @@ export function displayModal(name, photographer, sortedMedias, index) {
 
     document.addEventListener("keydown", handleKeyboardNavigation);
   } else if (name === "contact") {
-    // Cela rend la modal contact visible
     const modal = document.getElementById("contact_modal");
     modal.style.display = "flex";
 
-    // Cela récupere le formulaire de la modal contact
+    // Récupération des éléments focusables de la modal contact
+    const closeButton = modal.querySelector(".contact-modal-close");
+    const firstNameInput = modal.querySelector(
+      'input[type="text"]:first-of-type'
+    );
+    const lastNameInput = modal.querySelector(
+      'input[type="text"]:last-of-type'
+    );
+    const emailInput = modal.querySelector('input[type="email"]');
+    const messageInput = modal.querySelector("textarea");
+    const submitButton = modal.querySelector("button[type='submit']");
+
+    const focusableElements = [];
+
+    // Ajout du tabindex aux éléments
+    if (closeButton) {
+      closeButton.setAttribute("tabindex", "0");
+      focusableElements.push(closeButton);
+      closeButton.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          closeModal("contact");
+        }
+      });
+    }
+
+    if (firstNameInput) {
+      firstNameInput.setAttribute("tabindex", "0");
+      focusableElements.push(firstNameInput);
+    }
+
+    if (lastNameInput) {
+      lastNameInput.setAttribute("tabindex", "0");
+      focusableElements.push(lastNameInput);
+    }
+
+    if (emailInput) {
+      emailInput.setAttribute("tabindex", "0");
+      focusableElements.push(emailInput);
+    }
+
+    if (messageInput) {
+      messageInput.setAttribute("tabindex", "0");
+      focusableElements.push(messageInput);
+    }
+
+    if (submitButton) {
+      submitButton.setAttribute("tabindex", "0");
+      focusableElements.push(submitButton);
+    }
+
+    // Gestion de la boucle de tabulation
+    if (focusableElements.length > 0) {
+      modal.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+
+          if (e.shiftKey) {
+            // Si shift + tab et sur le premier élément, focus sur le dernier
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else {
+            // Si tab et sur le dernier élément, focus sur le premier
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      });
+
+      // Focus initial sur le premier champ
+      if (firstNameInput) {
+        firstNameInput.focus();
+      }
+    }
+
+    // Gestionnaire du formulaire
     const contactForm = document.querySelector(".contact-modal-form");
-    // Si tout les champs du formulaire sont remplis, on envoie les données
     contactForm.addEventListener("submit", (e) => {
-      // Cela empêche le formulaire de se soumettre et de rafraichir la page
       e.preventDefault();
 
-      // Cela récupère les données du formulaire
       const formData = {
         firstName: e.target.querySelectorAll('input[type="text"]')[0].value,
         lastName: e.target.querySelectorAll('input[type="text"]')[1].value,
@@ -81,66 +231,92 @@ export function displayModal(name, photographer, sortedMedias, index) {
         message: e.target.querySelector("textarea").value,
       };
 
-      // Cela affiche les données du formulaire
       console.log("Form submitted:", formData);
-
-      // Cela réinitialise le formulaire
       contactForm.reset();
-
-      // Cela ferme la modal contact
       closeModal("contact");
     });
   }
 }
 
-// Cette fonction met à jour le contenu de la modal en fonction de l'index
+// Mise à jour du contenu de la modal
 function updateModalContent(photographer, sortedMedias, index) {
   const mediaModalContainer = document.querySelector(".media-modal-container");
-
-  // Cela supprime le contenu de la modal pour la remplacer par le nouveau contenu
   mediaModalContainer.innerHTML = "";
 
   const mediaModalTitle = document.createElement("p");
   mediaModalTitle.classList.add("media-modal-title");
   mediaModalTitle.textContent = sortedMedias[index].title;
 
-  let mediaElement;
-
   const photographerFolder = photographer.name.split(" ")[0].replace("-", " ");
 
-  // Je suis obligé de récréer le contenu de la modal car le HTML peux changer en fonction du type de media
+  // Création de l'élément média avec la factory
+  const mediaElement = MediaElementFactory.createMediaElement(
+    photographerFolder,
+    photographer,
+    sortedMedias,
+    index
+  );
 
-  // ICI REMPLACER CE IF/ELSE PAR LE FACTORY CREER
-  if (sortedMedias[index].image) {
-    mediaElement = document.createElement("img");
-    mediaElement.src = `assets/photographers/${photographerFolder}/${sortedMedias[index].image}`;
-    mediaElement.alt = sortedMedias[index].title;
-  } else if (sortedMedias[index].video) {
-    mediaElement = document.createElement("video");
-    mediaElement.src = `assets/photographers/${photographerFolder}/${sortedMedias[index].video}`;
+  // Ajout des classes et attributs spécifiques à la modal
+  mediaElement.classList.add("media-modal-content");
+  if (mediaElement instanceof HTMLVideoElement) {
     mediaElement.controls = true;
     mediaElement.autoplay = true;
   }
-
-  mediaElement.classList.add("media-modal-content");
 
   mediaModalContainer.appendChild(mediaElement);
   mediaModalContainer.appendChild(mediaModalTitle);
 }
 
-// Cette fonction ferme la modal
+// Fermeture de la modal
 export function closeModal(name) {
   const modal = document.getElementById(`${name}_modal`);
   modal.style.display = "none";
 
-  // Cela supprime l'index de la modal quand elle est fermée
+  if (name === "media") {
+    // Nettoyage des éléments de la modal média
+    const closeButton = modal.querySelector(".media-modal-close");
+    const leftArrow = modal.querySelector(".modal-arrow-left");
+    const rightArrow = modal.querySelector(".modal-arrow-right");
+
+    if (closeButton) closeButton.removeAttribute("tabindex");
+    if (leftArrow) leftArrow.removeAttribute("tabindex");
+    if (rightArrow) rightArrow.removeAttribute("tabindex");
+  } else if (name === "contact") {
+    // Nettoyage des éléments de la modal contact
+    const closeButton = modal.querySelector(".contact-modal-close");
+    const firstNameInput = modal.querySelector(
+      'input[type="text"]:first-of-type'
+    );
+    const lastNameInput = modal.querySelector(
+      'input[type="text"]:last-of-type'
+    );
+    const emailInput = modal.querySelector('input[type="email"]');
+    const messageInput = modal.querySelector("textarea");
+    const submitButton = modal.querySelector("button[type='submit']");
+
+    if (closeButton) closeButton.removeAttribute("tabindex");
+    if (firstNameInput) firstNameInput.removeAttribute("tabindex");
+    if (lastNameInput) lastNameInput.removeAttribute("tabindex");
+    if (emailInput) emailInput.removeAttribute("tabindex");
+    if (messageInput) messageInput.removeAttribute("tabindex");
+    if (submitButton) submitButton.removeAttribute("tabindex");
+  }
+
+  // Suppression de l'événement escape
+  if (handleEscapeKey) {
+    document.removeEventListener("keydown", handleEscapeKey);
+    handleEscapeKey = null;
+  }
+
+  // Suppression de l'index de la modal
   if (name === "media") {
     delete modal.dataset.currentIndex;
   }
 
-  // Cela supprime les evenements pour les fleches quand la modal est fermée
+  // Suppression des événements de navigation
   if (handleKeyboardNavigation) {
     document.removeEventListener("keydown", handleKeyboardNavigation);
-    handleKeyboardNavigation = null; // Reset the reference
+    handleKeyboardNavigation = null;
   }
 }
