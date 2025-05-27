@@ -1,18 +1,17 @@
 import { getPhotographers } from "../Api/api.js";
-import { photographerTemplate } from "./photographer.js";
+import { renderPhotographerCard } from "./photographer.js";
 
-const photographers = getPhotographers();
-
+// Fonction pour afficher les photographes
 async function displayData(photographers) {
   const photographersSection = document.querySelector(".photographer_section");
 
   photographers.forEach((photographer) => {
-    const photographerModel = photographerTemplate(photographer);
-    const userCardDOM = photographerModel.getUserCardDOM();
-    photographersSection.appendChild(userCardDOM);
+    const userCard = renderPhotographerCard(photographer);
+    photographersSection.appendChild(userCard);
   });
 }
 
+// Fonction pour initialiser l'application
 async function init() {
   const photographers = await getPhotographers();
   if (photographers && photographers.length > 0) {
